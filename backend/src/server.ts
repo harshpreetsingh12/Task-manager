@@ -4,6 +4,8 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import authRoutes from './routes/auth.routes';
+import taskRoutes from './routes/task.routes';
+import connectDB from './config/db';
 
 dotenv.config();
 
@@ -18,15 +20,12 @@ app.use(cors({
 }));
 app.use(express.json()); 
 
-// 2. Database Connection
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/task-db';
-
-mongoose.connect(MONGODB_URI)
-  .then(() => console.log('Connected to MongoDB Atlas',MONGODB_URI))
-  .catch((err) => console.error(' MongoDB connection error:', err));
+// Database Connection
+connectDB();
 
 // Mounting different routes with prefix 
 app.use('/api/auth', authRoutes);
+app.use('/api/tasks', taskRoutes);
 
 // 4. Start Server
 app.listen(PORT, () => {

@@ -21,7 +21,7 @@ const taskSchema = new Schema<ITask>(
     },
     status: {
       type: String,
-      enum: ['pending','progress' 'completed'],
+      enum: ['pending','progress', 'completed'],
       default: 'pending',
     },
     dueDate: { type: Date }, 
