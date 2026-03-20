@@ -1,0 +1,4 @@
+
+export const CONF={
+    JWT_SECRET:process.env.JWT_SECRET
+}

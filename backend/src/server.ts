@@ -3,6 +3,7 @@ import type { Application } from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
+import authRoutes from './routes/auth.routes';
 
 dotenv.config();
 
@@ -21,13 +22,11 @@ app.use(express.json());
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/task-db';
 
 mongoose.connect(MONGODB_URI)
-  .then(() => console.log('Connected to MongoDB Atlas'))
+  .then(() => console.log('Connected to MongoDB Atlas',MONGODB_URI))
   .catch((err) => console.error(' MongoDB connection error:', err));
 
-// 3. Routes
-app.get('/', (req, residences) => {
-  residences.send('Smart Task Manager API is running...');
-});
+// Mounting different routes with prefix 
+app.use('/api/auth', authRoutes);
 
 // 4. Start Server
 app.listen(PORT, () => {
