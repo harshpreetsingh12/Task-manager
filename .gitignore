@@ -1,0 +1,42 @@
+# --- System Files ---
+node_modules/
+dist/
+build/
+.next/
+out/
+
+# --- Environment Secrets ---
+.env
+.env.local
+
+# --- Backend Specific ---
+/backend/node_modules/
+/backend/dist/
+/backend/logs/
+/backend/package-lock.json
+
+# --- Frontend Specific ---
+/frontend/node_modules/
+/frontend/.next/
+/frontend/build/
+/frontend/package-lock.json
+
+# production
+/build
+
+# misc
+.DS_Store
+*.pem
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+# --- IDE / Editor ---
+.vscode/
+.idea/
+*.swp
+*.log
