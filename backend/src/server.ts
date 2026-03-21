@@ -1,13 +1,13 @@
+import './config/env';  
+
 import express from 'express';
 import type { Application } from 'express';
 import cors from 'cors';
-import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import authRoutes from './routes/auth.routes';
 import taskRoutes from './routes/task.routes';
 import connectDB from './config/db';
 
-dotenv.config();
 
 const app: Application = express();
 const PORT = process.env.PORT || 5000;
