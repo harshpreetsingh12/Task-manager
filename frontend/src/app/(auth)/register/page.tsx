@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { authService } from '@/services/auth.service';
-import { showToast } from '@/services/toast';
+import { showToast } from '@/lib/toast';
 
 export default function RegisterPage() {
   const [formData, setFormData] = useState({ name: '', email: '', password: '' });
@@ -30,10 +30,10 @@ export default function RegisterPage() {
       }
     } catch (err) {
       if (err instanceof Error) {
-          showToast.error('Register Failed', err.message.message || 'Registration failed');
+          showToast.error('Register Failed', err.message || 'Registration failed');
           setError(err.message); 
         } else {
-        showToast.error('Register Failed', err.message.message || 'Something went wrong. Please try again.');
+        showToast.error('Register Failed', err.message || 'Something went wrong. Please try again.');
       }
     } finally {
       setLoading(false);
