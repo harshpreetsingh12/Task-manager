@@ -6,6 +6,7 @@ import cors from 'cors';
 import mongoose from 'mongoose';
 import authRoutes from './routes/auth.routes';
 import taskRoutes from './routes/task.routes';
+import userRoutes from './routes/user.routes';
 import connectDB from './config/db';
 
 
@@ -27,6 +28,7 @@ connectDB();
 // Mounting different routes with prefix 
 app.use('/api/auth', authRoutes);
 app.use('/api/tasks', taskRoutes);
+app.use('/api/user', userRoutes);
 
 // 4. Start Server
 app.listen(PORT, () => {
