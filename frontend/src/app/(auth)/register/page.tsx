@@ -20,14 +20,9 @@ export default function RegisterPage() {
     try {
       // add zod validator too if this becomes more complex data
       const res = await authService.register(formData)
+      router.push('/dashboard');
+      router.refresh();
 
-      if (res.ok) {
-        router.push('/dashboard');
-        router.refresh();
-      } else {
-        const data = await res.json();
-        showToast.error('Register Failed', data.message || 'Registration failed');
-      }
     } catch (err) {
       if (err instanceof Error) {
           showToast.error('Register Failed', err.message || 'Registration failed');

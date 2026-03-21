@@ -18,14 +18,10 @@ export default function LoginPage() {
     try {
       const res = await authService.login(formData);
 
-      if (res.ok) {
-        showToast.success('Welcome back!', 'Redirecting to your dashboard...');
-        router.push('/dashboard');
-        router.refresh();
-      } else {
-        const data = await res.json();
-        showToast.error('Login Failed', data.message || 'Invalid credentials');
-      }
+      showToast.success('Welcome back!', 'Redirecting to your dashboard...');
+      router.push('/dashboard');
+      router.refresh();
+      
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Connection failed';
       showToast.error('Authentication Error', errorMessage);
