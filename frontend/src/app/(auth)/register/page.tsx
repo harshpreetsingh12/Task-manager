@@ -24,12 +24,8 @@ export default function RegisterPage() {
       router.refresh();
 
     } catch (err) {
-      if (err instanceof Error) {
-          showToast.error('Register Failed', err.message || 'Registration failed');
-          setError(err.message); 
-        } else {
-        showToast.error('Register Failed', err.message || 'Something went wrong. Please try again.');
-      }
+       const errorMessage = err instanceof Error ? err.message : 'Something went wrong. Please try again.';
+      showToast.error('Register Failed', errorMessage);
     } finally {
       setLoading(false);
     }

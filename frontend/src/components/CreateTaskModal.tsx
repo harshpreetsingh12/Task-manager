@@ -95,7 +95,7 @@ export default function CreateTaskModal({ onClose, onSuccess }: Props) {
               <label className="text-xs font-semibold text-zinc-500 uppercase ml-1">Task Date</label>
               <input
                 type="date"
-                value={formData.date}
+                value={formData.taskDate}
                 onChange={(e) => setFormData({ ...formData, taskDate: e.target.value })}
                 className="w-full mt-1 p-4 bg-zinc-900 border border-zinc-800 rounded-2xl outline-none focus:ring-2 focus:ring-purple-600 cursor-pointer"
               />
