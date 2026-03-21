@@ -7,8 +7,6 @@ export const authService = {
   register: (userData: any) => 
     apiClient('/auth/register', { method: 'POST', body: JSON.stringify(userData) }),
     
-  logout: () => {
-    localStorage.removeItem('token');
-    window.location.href = '/login';//force go back to login
-  }
+  logout: () => apiClient('/auth/logout', { method: 'POST'}),
+
 };

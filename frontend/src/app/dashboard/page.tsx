@@ -7,8 +7,11 @@ import { showToast } from '@/lib/toast';
 import TaskCard from '@/components/TaskCard';
 import CreateTaskModal from '@/components/CreateTaskModal';
 import AISummary from '@/components/AISummary';
+import { useAuth } from '@/context/Auth.Context';
 
 export default function Dashboard() {
+    const { user, loading: authLoading,logout } = useAuth();
+
     const [tasks, setTasks] = useState([]);
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -69,7 +72,15 @@ export default function Dashboard() {
         <div className="w-4xl max-w-5xl mx-auto space-y-8 mt-5">
         {/* Header & AI Summary */}
         <section>
-            <h1 className="text-3xl font-bold mb-6">Welcome back, ✨</h1>
+            <div className='flex justify-between items-center mb-6'>
+            <h1 className="text-2xl font-bold capitalize">Welcome back, {user?.name ?? ""}✨</h1>
+
+            <button onClick={logout}
+                className="bg-purple-600 hover:bg-purple-700 text-white px-3 py-1 rounded-xl font-bold transition-all shadow-lg shadow-purple-600/20 cursor-pointer"
+                >
+                Logout
+            </button>
+            </div>
             <AISummary tasks={tasks} />
         </section>
 
