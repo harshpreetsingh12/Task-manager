@@ -17,9 +17,9 @@ export class AIService {
   async generateDailyBriefing(tasks: ITask[]): Promise<string> {
     const taskListString = tasks
         .map((t, i) => {
-            const due = t.dueDate
-            ? `Due: ${new Date(t.dueDate).toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" })}`
-            : "No due date";
+            const due = t.taskDate
+            ? `Date: ${new Date(t.taskDate).toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" })}`
+            : "No date";
 
             const desc = t.description ? `Note: ${t.description}` : "";
 
@@ -56,7 +56,7 @@ export class AIService {
   private buildFallbackSummary(tasks: ITask[]): string {
     const total = tasks.length;
     const high = tasks.filter(t => t.priority === "high").length;
-    const overdue = tasks.filter(t => t.dueDate && new Date(t.dueDate) < new Date()).length;
+    const overdue = tasks.filter(t => t.taskDate && new Date(t.taskDate) < new Date()).length;
   
     const parts: string[] = [];
   

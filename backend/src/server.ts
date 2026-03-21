@@ -32,5 +32,9 @@ app.use('/api/user', userRoutes);
 
 // 4. Start Server
 app.listen(PORT, () => {
-  console.log(`Server running at http://localhost:${PORT}`);
+  if (process.env.NODE_ENV === 'production') {
+    console.log(`Production Server is live on port ${PORT}`);
+  } else {
+    console.log(`λ Local Server running at http://localhost:${PORT}`);
+  }
 });
