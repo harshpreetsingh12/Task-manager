@@ -1,5 +1,5 @@
 import './config/env';  
-
+import cookieParser from 'cookie-parser';
 import express from 'express';
 import type { Application } from 'express';
 import cors from 'cors';
@@ -19,6 +19,7 @@ app.use(cors({
   credentials: true
 }));
 app.use(express.json()); 
+app.use(cookieParser());
 
 // Database Connection
 connectDB();
