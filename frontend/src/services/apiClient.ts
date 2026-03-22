@@ -47,7 +47,6 @@ export const apiStreamClient = async (endpoint: string, options: RequestInit = {
   });
 
   if (!response.ok) {
-    console.log(response)
     const errorData = await response.json().catch(() => ({}));
     throw new Error(errorData.message || 'Stream Request Failed');
   }
