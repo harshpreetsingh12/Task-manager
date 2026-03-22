@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { taskService } from '@/services/task.service';
 import { showToast } from '@/lib/toast';
+import { CreateTaskDTO } from '@/models/Task.model';
 
 interface Props {
   onClose: () => void;
@@ -10,7 +11,7 @@ interface Props {
 }
 
 export default function CreateTaskModal({ onClose, onSuccess }: Props) {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<CreateTaskDTO>({
     title: '',
     description: '',
     priority: 'medium',
@@ -35,6 +36,8 @@ export default function CreateTaskModal({ onClose, onSuccess }: Props) {
 
     setLoading(true);
     try {
+      console.log(formData)
+      return
       await taskService.createTask(formData);
       showToast.success("Task Created", "Your focus list has been updated.");
       onSuccess(); // Triggers the refetch in Dashboard
@@ -83,7 +86,7 @@ export default function CreateTaskModal({ onClose, onSuccess }: Props) {
               <label className="text-xs font-semibold text-zinc-500 uppercase ml-1">Priority</label>
               <select
                 value={formData.priority}
-                onChange={(e) => setFormData({ ...formData, priority: e.target.value })}
+                onChange={(e) => setFormData({ ...formData, priority: e.target.value as CreateTaskDTO["priority"] })}
                 className="w-full mt-1 p-4 bg-zinc-900 border border-zinc-800 rounded-2xl outline-none focus:ring-2 focus:ring-purple-600 appearance-none cursor-pointer"
               >
                 <option value="low">Low</option>

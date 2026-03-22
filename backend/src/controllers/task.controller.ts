@@ -1,10 +1,10 @@
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import Task from '../models/Task.model';
 import mongoose from 'mongoose';
 import { aiService } from '../services/ai.service';
 
 // create a New Task
-export const createTask = async (req: any, res: Response) => {
+export const createTask = async (req: Request, res: Response) => {
   try {
     const { title, description, priority, taskDate } = req.body;
 
@@ -31,7 +31,7 @@ export const createTask = async (req: any, res: Response) => {
 };
 
 // Get All User Tasks
-export const getTasks = async (req: any, res: Response) => {
+export const getTasks = async (req: Request, res: Response) => {
   try {
     const { date } = req.query; // Expecting "2026-03-21"
     
@@ -54,11 +54,11 @@ export const getTasks = async (req: any, res: Response) => {
 };
 
 // Delete a Task
-export const deleteTask = async (req: any, res: Response) => {
+export const deleteTask = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
 
-    if (!mongoose.Types.ObjectId.isValid(id)) { // checking id is mongoose object id valid
+    if (typeof id !== "string" || !mongoose.Types.ObjectId.isValid(id)) { // checking id is mongoose object id valid
       return res.status(400).json({ message: "Invalid task ID" });
     }
     // Ensure the taskbelongs to the user before deleting
@@ -74,11 +74,18 @@ export const deleteTask = async (req: any, res: Response) => {
   }
 };
 
-export const getAiSummary = async (req: any, res: Response) => {
+export const getAiSummary = async (req: Request, res: Response) => {
   try {
 
     const { date } = req.query; // date to generate summary for
 
+    if (typeof date !== "string") {
+      return res.status(400).json({ 
+        summary: "",
+        message:'Invalid date object',
+        error: true 
+      });
+    }
     const today = new Date(date);
     today.setUTCHours(0, 0, 0, 0);
 

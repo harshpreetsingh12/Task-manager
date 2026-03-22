@@ -1,5 +1,8 @@
-export default function TaskCard({ task, onDelete }: { task: any, onDelete: (id: string) => void }) {
-  const priorityColors: any = {
+type Priority = "high" | "medium" | "low";
+import { ITask } from "@/models/Task.model";
+
+export default function TaskCard({ task, onDelete }: { task: ITask, onDelete: (id: string) => void }) {
+  const priorityColors: Record<Priority, string> = {
     high: 'border-red-500/50 bg-red-500/5 text-red-400',
     medium: 'border-orange-500/50 bg-orange-500/5 text-orange-400',
     low: 'border-blue-500/50 bg-blue-500/5 text-blue-400',

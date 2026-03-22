@@ -8,6 +8,7 @@ import TaskCard from '@/components/TaskCard';
 import CreateTaskModal from '@/components/CreateTaskModal';
 import AISummary from '@/components/AISummary';
 import { useAuth } from '@/context/Auth.Context';
+import { ITask } from "@/models/Task.model";
 
 export default function Dashboard() {
     const { user, loading: authLoading,logout } = useAuth();
@@ -52,7 +53,7 @@ export default function Dashboard() {
     const handleDelete = async (id: string) => {
         try {
         await taskService.deleteTask(id);
-        setTasks(tasks.filter((t: any) => t._id !== id));
+        setTasks(tasks.filter((t: ITask) => t._id !== id));
         showToast.success('Task Deleted');
         } catch (err) {
         showToast.error('Error', 'Failed to delete task');
@@ -109,7 +110,7 @@ export default function Dashboard() {
             {loading ? (
                 <div className="text-center py-20 text-zinc-500">Loading your focus list...</div>
             ) : tasks.length > 0 ? (
-            tasks.map((task: any) => (
+            tasks.map((task: ITask) => (
                 <TaskCard key={task._id} task={task} onDelete={handleDelete} />
             ))
             ) : (

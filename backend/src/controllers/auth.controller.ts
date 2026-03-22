@@ -2,17 +2,19 @@ import { Request, Response } from 'express';
 import User, { IUser } from '../models/User.model'; 
 import jwt from 'jsonwebtoken';
 import randomName from '@scaleway/random-name'
+import { CookieOptions } from "express";
 
 const generateToken = (id: string) => {
   const accessToken=jwt.sign({ id }, process.env.JWT_SECRET!, { expiresIn: '30d' })
   return accessToken;
 };
 
-const COOKIE_OPTIONS: any = {
+const isProd = process.env.NODE_ENV === "production";
+const COOKIE_OPTIONS: CookieOptions = {
   httpOnly: true,
-  secure: process.env.NODE_ENV === 'production', // as prod support https
+  secure: isProd, // as prod support https
   // 'lax' for same-domain/localhost, 'none' for cross-domain production
-  sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',  // none as deployment can be with diff domains on prod
+  sameSite: isProd ? 'none' : 'lax',  // none as deployment can be with diff domains on prod
   maxAge: 7 * 24 * 60 * 60 * 1000,
   path: '/',
 };

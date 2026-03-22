@@ -27,10 +27,10 @@ export const apiClient = async (endpoint: string, options: RequestInit = {}) => 
     const text = await response.text();
     return { ok: true, data: text ? JSON.parse(text) : null };
 
-  } catch (err: any) {
-    if (err.name === 'AbortError') {
-      throw new Error('Request timed out. Please try again.');
-    }
+  } catch (err: unknown) {
+      if (err instanceof Error && err.name === "AbortError") {
+        throw new Error("Request timed out. Please try again.");
+      }
     throw err;
   }
 };

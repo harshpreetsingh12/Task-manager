@@ -1,3 +1,7 @@
+
+> **⏳ Note on Deployment:** The backend is hosted on Render's free tier. If the site hasn't been visited recently, the server will "sleep." **Please allow up to 60 seconds for the initial wake-up** during your first login attempt.
+
+
 # Smart Task Manager (AI-Powered)
 
 A modern, full-stack productivity application that transforms a standard task list into a strategic plan using Generative AI. 
@@ -9,7 +13,7 @@ A modern, full-stack productivity application that transforms a standard task li
 ###  Key Features
 * **AI Daily Briefing:** Leverages **Groq (Llama 3.3 70B)** to analyze your tasks and generate a high-speed productivity summary.
 * **Secure Authentication:** Custom Auth flow using **JWT** stored in **HTTP-Only Cookies** for maximum security against XSS.
-* **Responsive Dashboard:** A clean, minimalist UI built with **Next.js 15** and **Tailwind CSS**.
+* **Responsive Dashboard:** A clean, minimalist UI built with **Next.js 16** and **Tailwind CSS**.
 * **Real-time Feedback:** Toast notifications and loading skeletons for a seamless user experience.
 
 ---
@@ -70,8 +74,6 @@ A modern, full-stack productivity application that transforms a standard task li
 You can register your own account or use the test credentials below to skip the setup:
 * **Email:** `test@gmail.com`
 * **Password:** `test123`
-
-> **⏳ Note on Deployment:** The backend is hosted on Render's free tier. If the site hasn't been visited recently, the server will "sleep." **Please allow up to 60 seconds for the initial wake-up** during your first login attempt.
 
 ---
 

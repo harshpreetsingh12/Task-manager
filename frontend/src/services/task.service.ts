@@ -1,10 +1,11 @@
+import { CreateTaskDTO } from '@/models/Task.model';
 import { apiClient, apiStreamClient } from './apiClient';
 
 export const taskService = {
   getTasks: (date: string) => 
     apiClient(`/tasks?date=${date}`, { method: 'GET' }),
 
-  createTask: (taskData: any) => 
+  createTask: (taskData: CreateTaskDTO) => 
     apiClient('/tasks', { method: 'POST', body: JSON.stringify(taskData) }),
 
   deleteTask: (id: string) => 
