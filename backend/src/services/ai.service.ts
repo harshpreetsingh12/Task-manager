@@ -36,9 +36,6 @@ export class AIService {
 
       const prompt = PROMPTS.SUMMARY_GEN(taskListString);
 
-
-      // this.buildFallbackSummary(tasks,onChunk);
-      // return
       try {
           const stream = await this.client.chat.completions.create({
               model: CONF.GROQ_MODELS,
@@ -49,17 +46,20 @@ export class AIService {
 
           for await (const chunk of stream) {
               const delta = chunk.choices[0]?.delta?.content ?? "";
-              if (delta) onChunk(delta);
+                if (delta) {
+                  await new Promise(res => setTimeout(res, 50)); // subtle delay to show streaming
+                  onChunk(delta);
+              }
           }
 
       } catch (error) {
           console.error("Groq Stream Error:", error);
-         this.buildFallbackSummary(tasks,onChunk);
+         await this.buildFallbackSummary(tasks,onChunk);
       }
   }
 
   // fallback to generate generric summary if ai failes
-  private async buildFallbackSummary(tasks: ITask[],onChunk: (chunk: string) => void): string {
+  private async buildFallbackSummary(tasks: ITask[],onChunk: (chunk: string) => void): Promise<void> {
     const total = tasks.length;
     const high = tasks.filter(t => t.priority === "high").length;
     const overdue = tasks.filter(t => t.taskDate && new Date(t.taskDate) < new Date()).length;

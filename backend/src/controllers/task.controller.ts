@@ -102,15 +102,13 @@ export const getAiSummary = async (req: any, res: Response) => {
 
     try {
         await aiService.streamDailyBriefing(tasks, (chunk) => {
-          console.log(chunk)
-            const response= res.write(`data: ${JSON.stringify({ chunk })}\n\n`); 
+          const response= res.write(`data: ${JSON.stringify({ chunk })}\n\n`); 
             
             if ((res as any).flush) {
                 (res as any).flush(); 
             }
 
         });
-
         res.write(`data: ${JSON.stringify({ done: true })}\n\n`); // signal end
     } catch (err) {
       console.log(err)
