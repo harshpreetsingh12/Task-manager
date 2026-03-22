@@ -39,6 +39,7 @@ Fallback handling: If the AI is slow or unavailable, the app falls back to a sim
 ```bash
     cd backend
     npm install
+    npm run seed # IMPORTANT: Creates test user & sample tasks
     # Configure your .env (see .env.sample)
     npm run dev
 ```
@@ -91,4 +92,13 @@ You can register a new account or use these test credentials:
 * **Distributed Caching:** Utilize Redis to store generated AI briefings, reducing latency and API costs.
 * **Proactive Notifications:** Automated morning briefings delivered via Web Push API at 8:00 AM daily.
 
------
+    -----
+
+🛠️ API Testing (Postman)
+    To make testing as easy as possible, I have included a Postman Collection in the backend folder.
+
+    Location: backend/Smart_Task_Manager.postman_collection.json
+
+    Setup: Import the JSON into Postman and set the base_url variable to http://localhost:5000/api.
+
+    Included Endpoints: Full Auth flow (Signup/Login), Task CRUD.
