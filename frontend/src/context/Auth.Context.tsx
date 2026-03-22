@@ -28,6 +28,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const refreshUser = async () => {
     try {
+      setLoading(true);
       const response = await userService.getUser(); 
       if(response?.ok){
         setUser(response?.data)
@@ -45,7 +46,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const logout = async () => {
     try {
-      const response = await  authService.logout(); 
+      await  authService.logout(); 
       setUser(null);
       router.push('/login');
     } catch (err) {
