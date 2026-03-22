@@ -96,11 +96,11 @@ export const getAiSummary = async (req: Request, res: Response) => {
       status: { $ne: 'completed' } 
     });
 
-    if (tasks.length === 0) {
-      return  res.status(200).json({ 
-        summary: "You have no pending tasks for today. Enjoy your day!",
-      });
-    }
+    // if (tasks.length === 0) { // commented this as fallback will handle 
+    //   return  res.status(200).json({ 
+    //     summary: "You have no pending tasks for today. Enjoy your day!",
+    //   });
+    // }
     
     res.setHeader("Content-Type", "text/event-stream");
     res.setHeader("Cache-Control", "no-cache");
@@ -109,7 +109,7 @@ export const getAiSummary = async (req: Request, res: Response) => {
 
     try {
         await aiService.streamDailyBriefing(tasks, (chunk) => {
-          const response= res.write(`data: ${JSON.stringify({ chunk })}\n\n`); 
+          res.write(`data: ${JSON.stringify({ chunk })}\n\n`); 
             
             if ((res as any).flush) {
                 (res as any).flush(); 

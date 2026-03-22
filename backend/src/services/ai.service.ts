@@ -35,6 +35,11 @@ export class AIService {
 
       const prompt = PROMPTS.SUMMARY_GEN(taskListString);
 
+      if(tasks.length===0){
+        // if no tasks calling fallback for generic message
+         await this.buildFallbackSummary(tasks,onChunk);
+        return 
+      }
       try {
           const stream = await this.client.chat.completions.create({
               model: CONF.GROQ_MODELS,
