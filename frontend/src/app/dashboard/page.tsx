@@ -82,7 +82,7 @@ export default function Dashboard() {
                 Logout
             </button>
             </div>
-            <AISummary />
+            <AISummary date={selectedDate.toString()}/>
         </section>
 
         {/*  Filter & Actions */}

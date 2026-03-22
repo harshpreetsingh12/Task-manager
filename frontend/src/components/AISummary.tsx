@@ -4,10 +4,13 @@ import { format } from 'date-fns';
 import { useEffect, useRef, useState } from 'react';
 import { taskService } from '@/services/task.service';
 import { showToast } from '@/lib/toast';
-import { useTypewriter } from '@/hooks/useTypewriter';
+
+interface Props {
+  date: string;
+}
 
 // this generates summary of today 
-export default function AISummary() {
+export default function AISummary({date}:Props) {
   const [summary, setSummary] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
   const [isStreaming, setIsStreaming] = useState(false); 
@@ -43,7 +46,7 @@ export default function AISummary() {
     renderedRef.current=''
     
     try {
-      const formattedDate = format(new Date(), "yyyy-MM-dd");
+      const formattedDate = format(new Date(date), "yyyy-MM-dd");
 
       const res = await taskService.getAISummary(formattedDate);
 
@@ -74,6 +77,7 @@ export default function AISummary() {
           }
 
           if (payload.done) {
+            setIsStreaming(false);
             showToast.ai(
               "Briefing Ready",
               "Your AI coach has analyzed your day.",
