@@ -69,7 +69,6 @@ export default function AISummary({date}:Props) {
           if (!line.startsWith("data: ")) continue;
 
           const payload = JSON.parse(line.slice(6));
-          console.log(payload)
           if (payload.error) {
             console.log(payload.error)
             showToast.error("AI Error", "Could not reach the AI coach.");
@@ -86,7 +85,6 @@ export default function AISummary({date}:Props) {
           }
 
           if (payload.chunk) {
-            console.log(payload.chunk)
             if (!isStreaming) setIsStreaming(true); // start the rAF loop
             setIsGenerating(false);
             accumulatedRef.current += payload.chunk; 
