@@ -109,6 +109,56 @@ export class AIService {
     }
   }
 
+  async streamChatResponse(
+      userQuestion: string, 
+      retrievedTasks: any[], 
+      onChunk: (chunk: string) => void
+    ): Promise<void> {
+        //  Format retrieved tasks into a string for the prompt
+        const contextString = retrievedTasks
+            .map((t, i) => {
+                const status = t.status ? `[Status: ${t.status}]` : "";
+                const desc = t.description ? ` - ${t.description}` : "";
+                return `${i + 1}. ${t.title} ${status}${desc}`;
+            })
+            .join("\n");
+
+        const prompt = PROMPTS.CHAT_ASSISTANT(userQuestion, contextString);
+
+        // Handle empty results case
+        if (retrievedTasks.length === 0) {
+            const fallBackmsg="I couldn't find any tasks related to that request. Try rephrasing or adding more details!"
+            const stream=this.fakeSteam(fallBackmsg)
+            for await (const chunk of stream) {
+              onChunk(chunk);
+            }
+            return
+        }
+
+        try {
+            const stream = await this.client.chat.completions.create({
+                model: CONF.GROQ_MODELS,
+                messages: [{ role: "user", content: prompt }],
+                max_tokens: 300,
+                stream: true,
+            });
+
+            for await (const chunk of stream) {
+                const delta = chunk.choices[0]?.delta?.content ?? "";
+                if (delta) {
+                    await new Promise(res => setTimeout(res, 30)); 
+                    onChunk(delta);
+                }
+            }
+        } catch (error) {
+            console.error("Groq Chat Stream Error:", error);
+            const stream=this.fakeSteam("I ran into a bit of trouble accessing your tasks right now. Please try again in a moment.")
+            for await (const chunk of stream) {
+              onChunk(chunk);
+            }
+        }
+    }
+    
 }
 
 

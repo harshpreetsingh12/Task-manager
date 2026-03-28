@@ -6,6 +6,7 @@ import { taskService } from '@/services/task.service';
 import { showToast } from '@/lib/toast';
 import TaskCard from '@/components/TaskCard';
 import AISummary from '@/components/AISummary';
+import TaskAISearch from '@/components/TaskAISearch';
 import { useAuth } from '@/context/Auth.Context';
 import { ITask } from "@/models/Task.model";
 import CreateEditTaskModal from '@/components/CreateEditTaskModal';
@@ -106,6 +107,7 @@ export default function Dashboard() {
                 Logout
             </button>
             </div>
+            <TaskAISearch/>
             <AISummary date={selectedDate.toString()}/>
         </section>
 

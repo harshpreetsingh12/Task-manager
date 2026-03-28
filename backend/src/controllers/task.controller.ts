@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import Task from '../models/Task.model';
+import Task, { ITask } from '../models/Task.model';
 import mongoose from 'mongoose';
 import { aiService } from '../services/ai.service';
 
@@ -15,12 +15,16 @@ export const createTask = async (req: Request, res: Response) => {
     const neutralDate= new Date(taskDate);
     neutralDate.setUTCHours(0, 0, 0, 0);
 
+    const textToEmbed = `${title} ${description || ""}`;
+    const embedding = await aiService.generateEmbedding(textToEmbed);
+
     const task = await Task.create({
       userId: req.user.id, // Attached by auth middleware
       title,
       description,
       priority,
       taskDate:neutralDate,
+      description_vector:embedding
     });
 
     res.status(201).json(task);
@@ -61,6 +65,15 @@ export const updateTask = async (req: Request, res: Response) => {
 
     if (typeof id !== "string" || !mongoose.Types.ObjectId.isValid(id)) {
       return res.status(400).json({ message: "Invalid task ID" });
+    }
+
+    if(updates?.title || updates?.description){
+      const {title,description}=updates
+      const textToEmbed = `${title} ${description || ""}`;
+      const embedding = await aiService.generateEmbedding(textToEmbed);
+      if(embedding){
+        updates.description_vector=embedding
+      }
     }
 
     const task = await Task.findOneAndUpdate(
@@ -154,3 +167,87 @@ export const getAiSummary = async (req: Request, res: Response) => {
     });
   }
 };
+
+export const taskChat = async (req: Request, res: Response) => {
+  try {
+    const { question } = req.body;
+
+    const searchResults=await chatWithTasks(question,req.user.id)
+
+    if(!searchResults || !Array.isArray(searchResults)){
+      return res.status(400).json({
+        result:searchResults,
+        message: 'Task search failed'
+      });
+    }
+
+    res.setHeader("Content-Type", "text/event-stream");
+    res.setHeader("Cache-Control", "no-cache");
+    res.setHeader("Connection", "keep-alive");
+    res.flushHeaders();
+
+    console.log(question,searchResults)
+    try {
+        await aiService.streamChatResponse(question,searchResults, (chunk) => {
+          res.write(`data: ${JSON.stringify({ chunk })}\n\n`); 
+        });
+        res.write(`data: ${JSON.stringify({ done: true })}\n\n`); // signal end
+    } catch (err) {
+      console.log(err)
+        res.write(`data: ${JSON.stringify({ error: "Stream failed" })}\n\n`);
+    } finally {
+        res.end();
+    }
+
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({ message: 'Error searching task' });
+  }
+};
+
+async function chatWithTasks(userQuestion:string,userId:string):Promise<ITask[]> {
+  try {
+    // 1. Convert the user's question into a vector using your Python Service
+    const queryVector = await aiService.generateEmbedding(userQuestion);
+
+    // 2. Perform the Vector Search in MongoDB
+    const results = await Task.aggregate([
+      {
+        "$vectorSearch": {
+          "index": "task_search",
+          "path": "description_vector",  
+          "queryVector": queryVector,
+          "numCandidates":100,     // Internal pool to search from
+          "limit": 2 ,
+          "filter": { "userId": { "$eq": userId } }
+        }
+      },
+      {
+        "$project": {
+          "title": 1,
+          "description": 1,
+          "status": 1,
+          "score": { "$meta": "vectorSearchScore" } 
+        }
+      }
+    ]);
+
+    return results;
+  } catch (error) {
+    console.error("Vector Search failed:", error);
+    throw error;
+  }
+}
+
+
+export const taskChatSearchTester = async (req: Request, res: Response) => {
+  try {
+    const { question } = req.body;
+
+    const searchResults=await chatWithTasks(question,req.user.id)
+    res.json(searchResults);
+  }
+  catch(e){
+    console.log(e)
+  }
+}

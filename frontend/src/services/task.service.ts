@@ -16,4 +16,13 @@ export const taskService = {
     
   getAISummary: (date: string) => 
     apiStreamClient(`/tasks/summary?date=${date}`, { method: 'GET' }),
+    
+  getChatResponse: (question: string) => 
+    apiStreamClient(`/tasks/taskChat`, { 
+      method: 'POST',
+      body:JSON.stringify({question}),
+      headers:{
+        "Content-Type": "application/json"
+      }
+     }),
 };

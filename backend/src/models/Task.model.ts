@@ -1,14 +1,16 @@
 import mongoose, { Document, Schema } from 'mongoose';
 
-export interface ITask extends Document {
+export interface IBaseTask {
   userId: mongoose.Types.ObjectId;
   title: string;
   description?: string;
   priority: 'low' | 'medium' | 'high';
   status: 'pending' | 'completed';
   taskDate: Date;
-  description_vector:[Number]
+  description_vector:number[]
 }
+
+export interface ITask extends IBaseTask, Document {}
 
 const taskSchema = new Schema<ITask>(
   {
